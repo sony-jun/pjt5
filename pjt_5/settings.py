@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'asia/seoul'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -132,6 +132,6 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = "accounts.User"
+# AUTH_USER_MODEL = "accounts.User"
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
