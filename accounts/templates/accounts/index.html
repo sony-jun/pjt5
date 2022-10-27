@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+
+{% for account in accounts  %}
+<br>
+{{account.pk}}
+{{account.username}}
+{{account.email}}
+
+{% endfor %}
+
+{% endblock content %}
