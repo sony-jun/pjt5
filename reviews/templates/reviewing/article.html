@@ -4,25 +4,24 @@
 
 {% block content %}
 
-  <div class="container">
+  <div class="container my-5">
     <h1 class="text-center my-5">게시판</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       {% for review in reviews %}
-        <div class="col" >
-          <div class="card" >
-            <div class="card_link_img" style="height: 40vh;">
+        <div class="col">
+          <div class="card">
+            <div class="card_link_img">
               {% if review.image_thumbnail %}
                 <img src="{{ review.image_thumbnail.url }}" class="card-img-top" style="height: 100%; width:100%;" alt="...">
               {% else %}
                 <img src="{% static 'image/noimg.jpg' %}" class="card-img-top" style="height: 100%; width:100%;" alt="...">
               {% endif %}
               <div class="card_link_btn">
-                <button class="btn btn-primary">상세보기</button>
+                <a class="btn btn-primary" href="{% url 'reviews:reviews-detail' review.pk %}">상세보기</a>
               </div>
             </div>
             <div class="card-body">
-                <p class="card-text">{{ review.created_at }}</p>
-                {% comment %} <a class="btn btn-primary" href="{% url 'reviews:reviews-detail' review.pk %}">상세보기</a> {% endcomment %}
+              <p class="card-text">{{ review.created_at }}</p>
             </div>
           </div>
         </div>

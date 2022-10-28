@@ -1,8 +1,12 @@
+from urllib.error import HTTPError
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse
+from accounts.views import login
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 import os
+
 
 def reviews_article(request):
     reviews = Article.objects.all()
@@ -11,6 +15,8 @@ def reviews_article(request):
     }
     return render(request, "reviewing/article.html", context)
     
+
+@login_required
 def reviews_create(request):
     if request.method=='POST':
         form = ArticleForm(request.POST, request.FILES)
@@ -37,6 +43,7 @@ def reviews_detail(request, pk):
     }
     return render(request, 'reviewing/detail.html', context)
 
+@login_required
 def reviews_update(request, pk):
     article = Article.objects.get(pk=pk)
     if request.user == article.user:
@@ -59,28 +66,36 @@ def reviews_update(request, pk):
     else:
         return redirect("reviews:reviews-article")
 
+@login_required
 def reviews_delete(request, pk):
-    article = Article.objects.get(pk=pk)
-    if article.image:
-        os.remove(article.image.path)
-    if article.image_thumbnail:
-        os.remove(article.image_thumbnail.path)
-    article.delete()
-    return redirect('reviews:reviews-article')
+    if request.user == article.user:
+        article = Article.objects.get(pk=pk)
+        if article.image:
+            os.remove(article.image.path)
+        if article.image_thumbnail:
+            os.remove(article.image_thumbnail.path)
+        article.delete()
+        return redirect('reviews:reviews-article')
+    else:
+        return redirect('reviews:reviews-article')
 
 # comment 부분
-
 def reviews_comment_create(request, pk):
-    print(request.POST)
     article = get_object_or_404(Article, pk=pk)
-    comment_form = CommentForm(request.POST)
-    if comment_form.is_valid():
-        comment = comment_form.save(commit=False)
-        comment.article = article
-        comment.user = request.user
-        comment.save()
-        context = {
-            'content' : comment.content,
-            'userName' : comment.user.username,
-        }
-        return JsonResponse(context)
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.article = article
+                comment.user = request.user
+                comment.save()
+                context = {
+                    'content' : comment.content,
+                    'userName' : comment.user.username,
+                }
+                return JsonResponse(context)
+        else:
+            return HttpResponse(status=403)
+    else:
+        return redirect("accounts:login")
