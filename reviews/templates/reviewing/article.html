@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 %}
 {% load static %}
+{% load django_bootstrap5 %}
+
 {% block content %}
+
   <div class="container">
     <h1 class="text-center my-5">게시판</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -26,5 +28,7 @@
         </div>
       {% endfor %}
     </div>
+
   </div>
+</div>
 {% endblock content %}
