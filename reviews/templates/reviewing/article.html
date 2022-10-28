@@ -8,13 +8,13 @@
     <h1 class="text-center my-5">게시판</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       {% for review in reviews %}
-        <div class="col" style="height:auto;">
-          <div class="card" style="height: 20vh; width:100%">
-            <div class="card_link_img">
+        <div class="col" >
+          <div class="card" >
+            <div class="card_link_img" style="height: 40vh;">
               {% if review.image_thumbnail %}
-                <img src="{{ review.image_thumbnail.url }}" class="card-img-top" style="w-100 h-100" alt="...">
+                <img src="{{ review.image_thumbnail.url }}" class="card-img-top" style="height: 100%; width:100%;" alt="...">
               {% else %}
-                <img src="{% static 'image/noimg.jpg' %}" class="card-img-top" style="w-100 h-100" alt="...">
+                <img src="{% static 'image/noimg.jpg' %}" class="card-img-top" style="height: 100%; width:100%;" alt="...">
               {% endif %}
               <div class="card_link_btn">
                 <button class="btn btn-primary">상세보기</button>
