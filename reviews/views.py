@@ -1,6 +1,8 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
+import os
 
 def reviews_article(request):
     reviews = Article.objects.all()
@@ -26,8 +28,12 @@ def reviews_create(request):
 
 def reviews_detail(request, pk):
     form = Article.objects.get(pk=pk)
+    comment = CommentForm()
+    comments = form.comment_set.all()
     context = {
         'form' : form,
+        'comment' : comment,
+        'comments' : comments,
     }
     return render(request, 'reviewing/detail.html', context)
 
@@ -37,6 +43,10 @@ def reviews_update(request, pk):
         if request.method=="POST":
             form = ArticleForm(request.POST, request.FILES, instance=article)
             if form.is_valid():
+                if (article.image and request.FILES.get('image')) or request.POST.get('image-clear'):
+                    os.remove(article.image.path)
+                if (article.image_thumbnail and request.FILES.get('thumbnail')) or request.POST.get('thumbnail-clear'):
+                    os.remove(article.image_thumbnail.path)
                 form.save()
                 return redirect("reviews:reviews-detail", pk )
         else:
@@ -47,9 +57,30 @@ def reviews_update(request, pk):
         }
         return render(request, 'reviewing/update.html', context)
     else:
-        return redirect("reivews:reviews-article")
+        return redirect("reviews:reviews-article")
 
 def reviews_delete(request, pk):
     article = Article.objects.get(pk=pk)
+    if article.image:
+        os.remove(article.image.path)
+    if article.image_thumbnail:
+        os.remove(article.image_thumbnail.path)
     article.delete()
     return redirect('reviews:reviews-article')
+
+# comment 부분
+
+def reviews_comment_create(request, pk):
+    print(request.POST)
+    article = get_object_or_404(Article, pk=pk)
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.article = article
+        comment.user = request.user
+        comment.save()
+        context = {
+            'content' : comment.content,
+            'userName' : comment.user.username,
+        }
+        return JsonResponse(context)
