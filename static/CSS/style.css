@@ -1,0 +1,10 @@
+
+div[class="card_link_img"] {
+    position: relative;
+}
+
+div[class="card_link_btn"] {
+    top: 0;
+    left: 0;
+    position: absolute;
+}
