@@ -17,4 +17,42 @@
         <a class="btn btn-danger" href="{% url 'reviews:reviews-delete' form.pk %}">삭제</a>
     </div>
   </div>
+  <div class="container d-flex flex-column">
+    <div class"d-flex flex-row">
+    <form id='comment-form' data-detail-id="{{ form.pk }}">
+      {% csrf_token %}
+      {% bootstrap_form comment %}
+      <button class="btn btn-primary">작성</button>
+    </form>
+  </div>
+    <div id="comments">
+      {% for comment in comments %}
+      {{ comment.user }} | {{ comment.content}}
+      <hr>
+      {% endfor %}
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const commentForm = document.querySelector('#comment-form')
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    commentForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      axios({
+        method: 'POST',
+        url: `/reviews/detail/${event.target.dataset.detailId}/comments/`,
+        headers: {'X-CSRFToken': csrftoken},
+        data: new FormData(commentForm)
+      })
+      .then(response => {
+        console.log(response.data)
+        const comments = document.querySelector('#comments')
+        const p = document.createElement('p')
+        p.innerText = `${response.data.userName} | ${response.data.content}`
+        const hr = document.createElement('hr')
+        comments.append(p, hr)
+        commentForm.reset()
+      })
+    })
+  </script>
 {% endblock content %}
