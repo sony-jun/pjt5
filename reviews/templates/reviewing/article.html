@@ -1,33 +1,35 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 %}
 {% load static %}
+{% load django_bootstrap5 %}
+
 {% block content %}
-  <div class="container">
-    <h1 class="text-center my-5">게시판</h1>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      {% for review in reviews %}
-        <div class="col">
-          <div class="card">
-            <div style="height: 20vh; width:100%">
-            {% if review.image_thumbnail %}
-            <img src="{{ review.image_thumbnail.url }}" class="card-img-top" style="w-100 h-100" alt="...">
-            {% else %}
-            <img src="{% static 'images/noimg.jpg' %}" class="card-img-top" style="w-100 h-100" alt="...">
-            {% endif %}
-          </div>
-            <div class="card-body">
-              <h5 class="card-title">{{ review.title }}</h5>
-              <p class="card-text">{{ review.content }}</p>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-between">
-              <small class="text-muted">{{ review.created_at }}</small>
-              {% comment %} <a class="btn btn-primary" href="{% url 'reviews:reviews-detail' review.pk %}">상세보기</a> {% endcomment %}
-            </div>
-            </div>
+<div class="container">
+  <h1 class="text-center my-5">게시판</h1>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for review in reviews %}
+    <div class="col">
+      <div class="card">
+        <div style="height: 20vh; width:100%">
+          {% if review.image_thumbnail %}
+          <img src="{{ review.image_thumbnail.url }}" class="card-img-top" style="w-100 h-100" alt="...">
+          {% else %}
+          <img src="{% static 'images/noimg.jpg' %}" class="card-img-top" style="w-100 h-100" alt="...">
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ review.title }}</h5>
+          <p class="card-text">{{ review.content }}</p>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">{{ review.created_at }}</small>
+            {% comment %} <a class="btn btn-primary" href="{% url 'reviews:reviews-detail' review.pk %}">상세보기</a>
+            {% endcomment %}
           </div>
         </div>
-        {% endfor %}
       </div>
+    </div>
+    {% endfor %}
   </div>
+</div>
 {% endblock content %}
