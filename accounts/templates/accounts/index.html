@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       {% for account in accounts %}
-      <td>{{ user.last_name }}{{ user.first_name }}</td>
+      <td>{{ account.last_name }}{{ account.first_name }}</td>
 
       <th scope="row">
         <a href="{% url 'accounts:detail' account.pk %}" class="text-decoration-none">{{account.username}}</a>
